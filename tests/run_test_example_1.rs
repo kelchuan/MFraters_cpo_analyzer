@@ -42,16 +42,16 @@ fn test_library_run() -> Result<(), Box<dyn std::error::Error>> {
     let cmd = Command::new("compare")
     .arg("-metric")
     .arg("AE")
-    .arg("examples/example_experiment_1/CPO_figures/weighted_LPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-    .arg("examples/example_experiment_1/CPO_figures/weighted_LPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+    .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+    .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
     .arg("null")
     .ok();
     if cmd.is_ok() {
         Command::new("compare")
         .arg("-metric")
         .arg("AE")
-        .arg("examples/example_experiment_1/CPO_figures/weighted_LPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-        .arg("examples/example_experiment_1/test_results_binary/weighted_LPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+        .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+        .arg("examples/example_experiment_1/test_results_binary/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
         .arg("null")
         .assert()
         .success();
@@ -72,16 +72,16 @@ fn test_binary() -> Result<(), Box<dyn std::error::Error>> {
     let cmd = Command::new("compare")
     .arg("-metric")
     .arg("AE")
-    .arg("examples/example_experiment_1/CPO_figures/weighted_LPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-    .arg("examples/example_experiment_1/CPO_figures/weighted_LPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+    .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+    .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
     .arg("null")
     .ok();
     if cmd.is_ok() {
         Command::new("compare")
         .arg("-metric")
         .arg("AE")
-        .arg("examples/example_experiment_1/CPO_figures/weighted_LPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-        .arg("examples/example_experiment_1/test_results_binary/weighted_LPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+        .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+        .arg("examples/example_experiment_1/test_results_binary/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
         .arg("null")
         .assert()
         .success();
