@@ -20,7 +20,7 @@
 
 //! # CPO analyzer
 //!
-//! This crate contains tools to analyzer Crystal/Lattice Preffered Orientation (CPO/LPO) data. It is currently
+//! This crate contains tools to analyzer Crystal/Lattice Preffered Orientation (CPO/CPO) data. It is currently
 //! only able to crate sets of polefigures from ASPECT CPO data, but other type of inputs and plots of analysis
 //! are in the scope of this crate.
 //!
@@ -213,11 +213,11 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
     experiment_dirs.par_iter().for_each(|experiment_dir| {
         println!("Processing experiment {}", experiment_dir);
 
-        let lpo_dir = base_dir.clone() + &experiment_dir;
+        let cpo_dir = base_dir.clone() + &experiment_dir;
 
         // get a vector with the time for all the timesteps
         let statistics_file =
-            lpo_dir.to_owned() + &config.pole_figures.as_ref().unwrap().time_data_file;
+            cpo_dir.to_owned() + &config.pole_figures.as_ref().unwrap().time_data_file;
 
         println!("time data file:{}", statistics_file);
         let file = File::open(statistics_file).unwrap();
@@ -233,7 +233,7 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
             }
 
             if line.find('#') != Some(0) {
-                if line.find("particle_LPO") != None {
+                if line.find("particle_CPO") != None {
                     data = data + &line + "\n";
                 }
             }
@@ -296,7 +296,7 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
                 );
 
                 fs::create_dir_all(
-                    lpo_dir.to_owned() + &pole_figure_configuration.figure_output_dir,
+                    cpo_dir.to_owned() + &pole_figure_configuration.figure_output_dir,
                 )
                 .unwrap();
 
@@ -326,7 +326,7 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
                     while !file_found {
                         let angles_file = format!(
                             "{}{}-{:05}.{:04}.dat",
-                            lpo_dir,
+                            cpo_dir,
                             pole_figure_configuration.grain_data_file_prefix,
                             time_step,
                             rank_id
@@ -370,7 +370,7 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
 
                         let output_file = format!(
                             "{}{}_{}{}{}{}_g{}_sp{}_t{:05}.{:05}.png",
-                            lpo_dir,
+                            cpo_dir,
                             file_prefix_figures,
                             if elastisity_header {
                                 "elastic_"
@@ -388,7 +388,7 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
                         let output_file = Path::new(&output_file);
                         let particle_file = format!(
                             "{}{}-{:05}.{:04}.dat",
-                            lpo_dir,
+                            cpo_dir,
                             pole_figure_configuration.particle_data_file_prefix,
                             time_step,
                             rank_id

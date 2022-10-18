@@ -62,7 +62,7 @@ pub struct PoleFiguresConfiguration {
 
     /// Optional value of the prefix where to write out the produced pole figures. The program will add a postfix containing
     /// informatio about individual variables and settings such as the timestep and axes, etc.
-    /// The default value is `weighted_LPO`.
+    /// The default value is `weighted_CPO`.
     #[serde(default = "figure_output_prefix")]
     pub figure_output_prefix: String,
 
@@ -111,7 +111,7 @@ impl Default for PoleFiguresConfiguration {
             particle_data_file_prefix: "particle_CPO/particles".to_string(),
             grain_data_file_prefix: "particle_CPO/weighted_CPO".to_string(),
             figure_output_dir: "CPO_figures/".to_string(),
-            figure_output_prefix: "weighted_LPO".to_string(),
+            figure_output_prefix: "weighted_CPO".to_string(),
             color_scale: ColorGradient::Batlow,
             elastisity_header: true,
             small_figure: false,
