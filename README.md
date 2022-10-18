@@ -50,6 +50,17 @@ To run the analyzer, a configuration file is needed. The configuration files are
    # A vector containing the minerals to be plotted. These will be added as a vertical
    # axis  to the plot. Available options are `Olivine` and `Enstatite`.
    minerals = ["Olivine","Enstatite"]
+
+   # Optional: Set the location where the particles are stored and the prefix which is 
+   # for the file names.
+   particle_data_file_prefix = "particle_CPO/particles"
+
+   # Optional: Set the location where the grain data are stored and the prefix which is 
+   # for the file names.
+   grain_data_file_prefix = "particle_CPO/weighted_CPO"
+
+   # for more  extensive documentation and other options see:
+   # https://docs.rs/cpo_analyzer/latest/cpo_analyzer/configuration/pole_figure_configuration/struct.PoleFiguresConfiguration.html
  ```
 
 Note that there are more options availble then shown in this example, which are currently only visible in the code (`src/configuration/` dir) and the code documentation. There is also a more elaborate example in the `example` folder.
