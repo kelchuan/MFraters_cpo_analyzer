@@ -246,6 +246,7 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
             .comment(Some(b'#'))
             .has_headers(false)
             .from_reader(data.as_bytes());
+        let mut counter = 0;
         for result in rdr.records() {
             // The iterator yields Result<StringRecord, Error>, so we check the
             // error here..
@@ -255,7 +256,10 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
                 Some(time) => timestep_to_time.push(time.to_string().parse::<f64>().unwrap()),
                 None => assert!(false, "Time not found"),
             }
+            counter += 1;
         }
+
+        assert!(counter > 0,"Did not find any entries in the statistics file. This means there where no (non-comment) lines which had 'particle_CPO' in them.");
 
         if config.pole_figures.is_some() {
             let pole_figure_configuration = config.pole_figures.as_ref().unwrap();
