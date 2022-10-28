@@ -26,7 +26,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 #[test]
-fn test_library_run() -> Result<(), Box<dyn std::error::Error>> {
+fn test_library_run_example_1() -> Result<(), Box<dyn std::error::Error>> {
     let config_file = PathBuf::from("examples/example_experiment_1/example_1_config.toml");
 
     let mut configuration =
@@ -63,7 +63,7 @@ fn test_library_run() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[test]
-fn test_binary() -> Result<(), Box<dyn std::error::Error>> {
+fn test_binary_example_1() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("cpo_analyzer")?;
     cmd.arg("tests/test_example_1.toml");
     cmd.assert().success();
