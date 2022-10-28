@@ -65,12 +65,18 @@ jobs:
       run: cargo build --verbose
     - name: Run tests
       run: cargo test --verbose -- --nocapture 
-    - name: store artifacts
+    - name: store artifact image
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3
       with:
         name: tester-artifact.png
         path: "examples/example_experiment_1/test_results_binary/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png"
+    - name: store artifact diff image
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: tester-artifact.png
+        path: "null.png"
     - name: Run doc
       run: cargo doc --verbose
 

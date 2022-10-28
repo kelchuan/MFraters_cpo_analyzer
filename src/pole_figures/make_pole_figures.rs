@@ -128,7 +128,7 @@ pub fn make_pole_figures(
     let line_distance = 5.5;
     let top_margin = 0.25;
     let left_margin = 0.5;
-    let font_type = "Helvetica";
+    let font_type = "dejavu";
 
     if elastisity_header {
         // Do stuff in header
@@ -387,7 +387,7 @@ pub fn make_pole_figures(
                         } else {
                             format!("{:.2}", max_count_value)
                         },
-                        ("Helvetica", font_size_figure),
+                        ("dejavu", font_size_figure),
                     )
                     .build_cartesian_2d(0.0..1.0, 0.0..max_count_value)?;
 
@@ -398,7 +398,7 @@ pub fn make_pole_figures(
                     .y_label_offset(15)
                     .disable_x_mesh()
                     .disable_y_mesh()
-                    .label_style(("Helvetica", font_size_figure))
+                    .label_style(("dejavu", font_size_figure))
                     .draw()?;
 
                 let legend_size = 151;
