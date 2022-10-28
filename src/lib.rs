@@ -445,47 +445,54 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
 
                         let mut integer = 0;
                         for result in rdr.deserialize() {
+                            println!("result: {:?}",result);
                             let record: Record = result.unwrap();
                             if record.id == *particle_id {
                                 let deg_to_rad = std::f64::consts::PI / 180.;
 
                                 // olivine
-                                let euler_angles = Array::from(vec![
-                                    record.mineral_0_EA_phi.unwrap() * deg_to_rad,
-                                    record.mineral_0_EA_theta.unwrap() * deg_to_rad,
-                                    record.mineral_0_EA_z.unwrap() * deg_to_rad,
-                                ]);
-                                let rotation_matrix =
-                                    euler_angles_to_rotation_matrix(euler_angles).unwrap();
+                                if pole_figure_configuration.minerals.contains(&Mineral::Olivine)
+                                {
+                                  let euler_angles = Array::from(vec![
+                                      record.mineral_0_EA_phi.unwrap() * deg_to_rad,
+                                      record.mineral_0_EA_theta.unwrap() * deg_to_rad,
+                                      record.mineral_0_EA_z.unwrap() * deg_to_rad,
+                                  ]);
+                                  let rotation_matrix =
+                                      euler_angles_to_rotation_matrix(euler_angles).unwrap();
 
-                                particle_olivine_a_axis_vectors
-                                    .push(rotation_matrix.row(0).to_owned());
-                                particle_olivine_b_axis_vectors
-                                    .push(rotation_matrix.row(1).to_owned());
-                                particle_olivine_c_axis_vectors
-                                    .push(rotation_matrix.row(2).to_owned());
+                                  particle_olivine_a_axis_vectors
+                                      .push(rotation_matrix.row(0).to_owned());
+                                  particle_olivine_b_axis_vectors
+                                      .push(rotation_matrix.row(1).to_owned());
+                                  particle_olivine_c_axis_vectors
+                                      .push(rotation_matrix.row(2).to_owned());
+                                }
 
                                 // enstatite
-                                let euler_angles = Array::from(vec![
-                                    record.mineral_1_EA_phi.unwrap() * deg_to_rad,
-                                    record.mineral_1_EA_theta.unwrap() * deg_to_rad,
-                                    record.mineral_1_EA_z.unwrap() * deg_to_rad,
-                                ]);
-                                let rotation_matrix =
-                                    euler_angles_to_rotation_matrix(euler_angles).unwrap();
+                                if pole_figure_configuration.minerals.contains(&Mineral::Enstatite)
+                                {
+                                  let euler_angles = Array::from(vec![
+                                      record.mineral_1_EA_phi.unwrap() * deg_to_rad,
+                                      record.mineral_1_EA_theta.unwrap() * deg_to_rad,
+                                      record.mineral_1_EA_z.unwrap() * deg_to_rad,
+                                  ]);
+                                  let rotation_matrix =
+                                      euler_angles_to_rotation_matrix(euler_angles).unwrap();
 
-                                particle_enstatite_a_axis_vectors
-                                    .push(rotation_matrix.row(0).to_owned());
-                                particle_enstatite_b_axis_vectors
-                                    .push(rotation_matrix.row(1).to_owned());
-                                particle_enstatite_c_axis_vectors
-                                    .push(rotation_matrix.row(2).to_owned());
+                                  particle_enstatite_a_axis_vectors
+                                      .push(rotation_matrix.row(0).to_owned());
+                                  particle_enstatite_b_axis_vectors
+                                      .push(rotation_matrix.row(1).to_owned());
+                                  particle_enstatite_c_axis_vectors
+                                      .push(rotation_matrix.row(2).to_owned());
+                                }
                             }
                             integer = integer + 1;
                         }
 
                         // check if the particle id was found in this file, otherwise continue
-                        if particle_olivine_a_axis_vectors.len() == 0 {
+                        if particle_olivine_a_axis_vectors.len() == 0 && particle_enstatite_a_axis_vectors.len() == 0 {
                             rank_id = rank_id + 1;
                             continue;
                         }
@@ -552,7 +559,7 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
                             }
                         }
 
-                        let n_grains = particle_olivine_a_axis_vectors.len();
+                        let n_grains = std::cmp::max(particle_olivine_a_axis_vectors.len(),particle_enstatite_a_axis_vectors.len());
 
                         let mut pole_figure_grid: Vec<Vec<PoleFigure>> = vec![
                                 vec![
