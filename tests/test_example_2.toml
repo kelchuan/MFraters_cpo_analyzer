@@ -1,0 +1,17 @@
+# Same as example_experiment_1, but with only olivine data
+base_dir = "examples/"
+experiment_dirs = ["example_experiment_2/"]
+
+compressed = false
+
+[pole_figures]
+    figure_output_dir = "test_results_binary/"
+    elastisity_header = true
+    small_figure = true
+    no_description_text = false
+    color_scale = "Batlow"
+    times = [0.6,1.0]
+    particle_ids = [0]
+    axes = ["AAxis","BAxis","CAxis"]
+    minerals = ["Olivine"]
+
