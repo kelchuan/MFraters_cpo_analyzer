@@ -65,6 +65,18 @@ jobs:
       run: cargo build --verbose
     - name: Run tests
       run: cargo test --verbose -- --nocapture 
+    - name: store artifact image
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: tester-artifact.png
+        path: "examples/example_experiment_1/test_results_binary/*.png"
+    - name: store artifact diff image
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: tester-artifact.png
+        path: "diff.png"
     - name: Run doc
       run: cargo doc --verbose
 
