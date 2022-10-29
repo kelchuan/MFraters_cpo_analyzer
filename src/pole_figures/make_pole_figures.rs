@@ -209,9 +209,9 @@ pub fn make_pole_figures(
         );
         println!("    start header: Elapsed time: {:.2?}", clock.elapsed());
 
-        let style: TextStyle = 
-            (font_type, font_size_header).into();
-        println!("font familiy = {:?}.",style.font.get_family().as_str());
+        //let style: TextStyle = 
+        //    (font_type, font_size_header).into();
+        //println!("font familiy = {:?}.",style.font.get_family().as_str());
 
         header
         .draw(&Text::new(
