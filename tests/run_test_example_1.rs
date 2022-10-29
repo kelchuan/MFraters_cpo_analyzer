@@ -44,7 +44,7 @@ fn test_library_run() -> Result<(), Box<dyn std::error::Error>> {
     .arg("AE")
     .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
     .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-    .arg("null")
+    .arg("diff.png")
     .ok();
     if cmd.is_ok() {
         Command::new("compare")
@@ -52,7 +52,7 @@ fn test_library_run() -> Result<(), Box<dyn std::error::Error>> {
         .arg("AE")
         .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
         .arg("examples/example_experiment_1/test_results_binary/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-        .arg("null")
+        .arg("diff.png")
         .assert()
         .success();
     } else {

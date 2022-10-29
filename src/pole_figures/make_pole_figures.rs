@@ -128,7 +128,7 @@ pub fn make_pole_figures(
     let line_distance = 5.5;
     let top_margin = 0.25;
     let left_margin = 0.5;
-    let font_type = "dejavu";
+    let font_type = "s3nconsolata32ff";
 
     if elastisity_header {
         // Do stuff in header
@@ -208,6 +208,10 @@ pub fn make_pole_figures(
             clock.elapsed()
         );
         println!("    start header: Elapsed time: {:.2?}", clock.elapsed());
+
+        let style: TextStyle = 
+            (font_type, font_size_header).into();
+        println!("font familiy = {:?}.",style.font.get_family().as_str());
 
         header
         .draw(&Text::new(
@@ -387,7 +391,7 @@ pub fn make_pole_figures(
                         } else {
                             format!("{:.2}", max_count_value)
                         },
-                        ("dejavu", font_size_figure),
+                        ("ubuntu", font_size_figure),
                     )
                     .build_cartesian_2d(0.0..1.0, 0.0..max_count_value)?;
 
@@ -398,7 +402,7 @@ pub fn make_pole_figures(
                     .y_label_offset(15)
                     .disable_x_mesh()
                     .disable_y_mesh()
-                    .label_style(("dejavu", font_size_figure))
+                    .label_style(("ubuntu", font_size_figure))
                     .draw()?;
 
                 let legend_size = 151;

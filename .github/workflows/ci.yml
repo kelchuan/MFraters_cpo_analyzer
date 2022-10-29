@@ -76,7 +76,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: tester-artifact.png
-        path: "null.png"
+        path: "diff.png"
     - name: Run doc
       run: cargo doc --verbose
 
