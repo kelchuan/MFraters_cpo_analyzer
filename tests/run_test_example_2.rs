@@ -26,8 +26,8 @@ use std::path::PathBuf;
 use std::process::Command;
 
 #[test]
-fn test_library_run_example_1() -> Result<(), Box<dyn std::error::Error>> {
-    let config_file = PathBuf::from("examples/example_experiment_1/example_1_config.toml");
+fn test_library_run_example_2() -> Result<(), Box<dyn std::error::Error>> {
+    let config_file = PathBuf::from("examples/example_experiment_2/example_2_config.toml");
 
     let mut configuration =
         load_configuration_file(config_file).expect("Could not load configuration file");
@@ -42,17 +42,17 @@ fn test_library_run_example_1() -> Result<(), Box<dyn std::error::Error>> {
     let cmd = Command::new("compare")
     .arg("-metric")
     .arg("AE")
-    .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-    .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+    .arg("examples/example_experiment_2/CPO_figures/weighted_CPO_elastic_oli_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+    .arg("examples/example_experiment_2/CPO_figures/weighted_CPO_elastic_oli_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
     .arg("null")
     .ok();
     if cmd.is_ok() {
         Command::new("compare")
         .arg("-metric")
         .arg("AE")
-        .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-        .arg("examples/example_experiment_1/test_results_binary/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-        .arg("examples/example_experiment_1/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.diff.png")
+        .arg("examples/example_experiment_2/CPO_figures/weighted_CPO_elastic_oli_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+        .arg("examples/example_experiment_2/test_results_binary/weighted_CPO_elastic_oli_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+        .arg("examples/example_experiment_2/test_results_binary/weighted_CPO_elastic_oli_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.diff.png")
         .assert()
         .success();
     } else {
@@ -63,26 +63,26 @@ fn test_library_run_example_1() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[test]
-fn test_binary_example_1() -> Result<(), Box<dyn std::error::Error>> {
+fn test_binary_example_2() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("cpo_analyzer")?;
-    cmd.arg("tests/test_example_1.toml");
+    cmd.arg("tests/test_example_2.toml");
     cmd.assert().success();
 
     // test whether the command works by comparing the same image.
     let cmd = Command::new("compare")
     .arg("-metric")
     .arg("AE")
-    .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-    .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+    .arg("examples/example_experiment_2/CPO_figures/weighted_CPO_elastic_oli_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+    .arg("examples/example_experiment_2/CPO_figures/weighted_CPO_elastic_oli_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
     .arg("null")
     .ok();
     if cmd.is_ok() {
         Command::new("compare")
         .arg("-metric")
         .arg("AE")
-        .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-        .arg("examples/example_experiment_1/test_results_binary/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-        .arg("null")
+        .arg("examples/example_experiment_2/CPO_figures/weighted_CPO_elastic_oli_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+        .arg("examples/example_experiment_2/test_results_binary/weighted_CPO_elastic_oli_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
+        .arg("examples/example_experiment_2/test_results_binary/weighted_CPO_elastic_oli_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.diff.png")
         .assert()
         .success();
     } else {

@@ -70,7 +70,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: tester-artifact.png
-        path: "examples/example_experiment_1/test_results_binary/*.png"
+        path: "examples/example_experiment_*/test_results_binary/*.png"
     - name: store artifact diff image
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3
