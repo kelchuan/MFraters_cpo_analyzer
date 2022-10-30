@@ -52,7 +52,7 @@ fn test_library_run() -> Result<(), Box<dyn std::error::Error>> {
         .arg("AE")
         .arg("examples/example_experiment_1/CPO_figures/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
         .arg("examples/example_experiment_1/test_results_binary/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.png")
-        .arg("null")
+        .arg("examples/example_experiment_1/weighted_CPO_elastic_oli_ens_A-B-C-Axis_Batlow_g1_sp301_t00001.00000.diff.png")
         .assert()
         .success();
     } else {
