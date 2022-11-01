@@ -171,6 +171,7 @@ pub fn load_configuration_file(config_file: PathBuf) -> Result<Config, toml::de:
     toml::from_str(&config_file_string)
 }
 
+/// Get a list of timestep from the statisitics file
 fn get_timesteps(statistics_file: &String) -> Vec<f64> {
     println!("time data file:{}", statistics_file);
     let file = File::open(statistics_file).unwrap();
@@ -213,6 +214,36 @@ fn get_timesteps(statistics_file: &String) -> Vec<f64> {
     assert!(timestep_to_time.len() > 0,"Did not find any entries in the statistics file. This means there where no (non-comment) lines which had 'particle_CPO' in them.");
 
     timestep_to_time
+}
+
+/// find closest value to time in timestep_to_time
+fn get_closest_time_step(output_time: &f64, timestep_to_time: &Vec<f64>) -> u64 {
+    let after_time = timestep_to_time.iter().position(|x| x > &output_time);
+
+    let after_timestep = match after_time {
+        Some(timestep) => timestep,
+        None => timestep_to_time.len() - 1,
+    };
+
+    // todo: oneline
+    let before_timestep = if after_timestep > 0 {
+        after_timestep - 1
+    } else {
+        after_timestep
+    };
+
+    // check wheter before_timestep or after_timestep is closer to output_time,
+    // then use that one.
+    let before_timestep_diff = (output_time - timestep_to_time[before_timestep]).abs();
+    let after_timestep_diff = (output_time - timestep_to_time[after_timestep]).abs();
+
+    let time_step = if before_timestep_diff < after_timestep_diff {
+        before_timestep as u64
+    } else {
+        after_timestep as u64
+    };
+
+    time_step
 }
 
 /// Entry point for if the location of the config file is already know, such as the `run` function.
@@ -270,30 +301,7 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
             for output_time in &pole_figure_configuration.times {
                 // find closest value in timestep_to_time
                 // assume it always starts a zero
-                let after_time = timestep_to_time.iter().position(|x| x > &output_time);
-
-                let after_timestep = match after_time {
-                    Some(timestep) => timestep,
-                    None => timestep_to_time.len() - 1,
-                };
-
-                // todo: oneline
-                let mut before_timestep = after_timestep;
-                if after_timestep > 0 {
-                    before_timestep = after_timestep - 1
-                }
-
-                // check wheter before_timestep or after_timestep is closer to output_time,
-                // then use that one.
-                let before_timestep_diff = (output_time - timestep_to_time[before_timestep]).abs();
-                let after_timestep_diff = (output_time - timestep_to_time[after_timestep]).abs();
-
-                let time_step = if before_timestep_diff < after_timestep_diff {
-                    before_timestep as u64
-                } else {
-                    after_timestep as u64
-                };
-
+                let time_step = get_closest_time_step(&output_time, &timestep_to_time);
                 let time = timestep_to_time[time_step as usize];
 
                 println!(
