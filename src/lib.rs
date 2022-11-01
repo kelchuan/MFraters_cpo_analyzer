@@ -171,6 +171,50 @@ pub fn load_configuration_file(config_file: PathBuf) -> Result<Config, toml::de:
     toml::from_str(&config_file_string)
 }
 
+fn get_timesteps(statistics_file: &String) -> Vec<f64> {
+    println!("time data file:{}", statistics_file);
+    let file = File::open(statistics_file).unwrap();
+    let reader = BufReader::new(file);
+
+    let mut data: String = "".to_string();
+    for line in reader.lines() {
+        let line = line.unwrap();
+        let line = line.trim();
+        let mut line = line.replace("  ", " ");
+        while let Some(_) = line.find("  ") {
+            line = line.replace("  ", " ");
+        }
+
+        if line.find('#') != Some(0) {
+            if line.find("particle_CPO") != None {
+                data = data + &line + "\n";
+            }
+        }
+    }
+
+    let mut timestep_to_time: Vec<f64> = vec![];
+    let mut rdr = csv::ReaderBuilder::new()
+        .trim(csv::Trim::All)
+        .delimiter(b' ')
+        .comment(Some(b'#'))
+        .has_headers(false)
+        .from_reader(data.as_bytes());
+    for result in rdr.records() {
+        // The iterator yields Result<StringRecord, Error>, so we check the
+        // error here..
+        let record = result.unwrap().clone();
+        let time = record.get(1).clone();
+        match time {
+            Some(time) => timestep_to_time.push(time.to_string().parse::<f64>().unwrap()),
+            None => assert!(false, "Time not found"),
+        }
+    }
+
+    assert!(timestep_to_time.len() > 0,"Did not find any entries in the statistics file. This means there where no (non-comment) lines which had 'particle_CPO' in them.");
+
+    timestep_to_time
+}
+
 /// Entry point for if the location of the config file is already know, such as the `run` function.
 ///
 /// # Example 1: CPO analyzer run function
@@ -215,51 +259,11 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
 
         let cpo_dir = base_dir.clone() + &experiment_dir;
 
-        // get a vector with the time for all the timesteps
-        let statistics_file =
-            cpo_dir.to_owned() + &config.pole_figures.as_ref().unwrap().time_data_file;
-
-        println!("time data file:{}", statistics_file);
-        let file = File::open(statistics_file).unwrap();
-        let reader = BufReader::new(file);
-
-        let mut data: String = "".to_string();
-        for line in reader.lines() {
-            let line = line.unwrap();
-            let line = line.trim();
-            let mut line = line.replace("  ", " ");
-            while let Some(_) = line.find("  ") {
-                line = line.replace("  ", " ");
-            }
-
-            if line.find('#') != Some(0) {
-                if line.find("particle_CPO") != None {
-                    data = data + &line + "\n";
-                }
-            }
-        }
-
-        let mut timestep_to_time: Vec<f64> = vec![];
-        let mut rdr = csv::ReaderBuilder::new()
-            .trim(csv::Trim::All)
-            .delimiter(b' ')
-            .comment(Some(b'#'))
-            .has_headers(false)
-            .from_reader(data.as_bytes());
-        for result in rdr.records() {
-            // The iterator yields Result<StringRecord, Error>, so we check the
-            // error here..
-            let record = result.unwrap().clone();
-            let time = record.get(1).clone();
-            match time {
-                Some(time) => timestep_to_time.push(time.to_string().parse::<f64>().unwrap()),
-                None => assert!(false, "Time not found"),
-            }
-        }
-
-        assert!(timestep_to_time.len() > 0,"Did not find any entries in the statistics file. This means there where no (non-comment) lines which had 'particle_CPO' in them.");
-
         if config.pole_figures.is_some() {
+            // get a vector with the time for all the timesteps
+            let statistics_file =
+                cpo_dir.to_owned() + &config.pole_figures.as_ref().unwrap().time_data_file;
+            let timestep_to_time = get_timesteps(&statistics_file);
             let pole_figure_configuration = config.pole_figures.as_ref().unwrap();
             let elastisity_header = pole_figure_configuration.elastisity_header;
 
@@ -445,54 +449,60 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
 
                         let mut integer = 0;
                         for result in rdr.deserialize() {
-                            println!("result: {:?}",result);
+                            println!("result: {:?}", result);
                             let record: Record = result.unwrap();
                             if record.id == *particle_id {
                                 let deg_to_rad = std::f64::consts::PI / 180.;
 
                                 // olivine
-                                if pole_figure_configuration.minerals.contains(&Mineral::Olivine)
+                                if pole_figure_configuration
+                                    .minerals
+                                    .contains(&Mineral::Olivine)
                                 {
-                                  let euler_angles = Array::from(vec![
-                                      record.mineral_0_EA_phi.unwrap() * deg_to_rad,
-                                      record.mineral_0_EA_theta.unwrap() * deg_to_rad,
-                                      record.mineral_0_EA_z.unwrap() * deg_to_rad,
-                                  ]);
-                                  let rotation_matrix =
-                                      euler_angles_to_rotation_matrix(euler_angles).unwrap();
+                                    let euler_angles = Array::from(vec![
+                                        record.mineral_0_EA_phi.unwrap() * deg_to_rad,
+                                        record.mineral_0_EA_theta.unwrap() * deg_to_rad,
+                                        record.mineral_0_EA_z.unwrap() * deg_to_rad,
+                                    ]);
+                                    let rotation_matrix =
+                                        euler_angles_to_rotation_matrix(euler_angles).unwrap();
 
-                                  particle_olivine_a_axis_vectors
-                                      .push(rotation_matrix.row(0).to_owned());
-                                  particle_olivine_b_axis_vectors
-                                      .push(rotation_matrix.row(1).to_owned());
-                                  particle_olivine_c_axis_vectors
-                                      .push(rotation_matrix.row(2).to_owned());
+                                    particle_olivine_a_axis_vectors
+                                        .push(rotation_matrix.row(0).to_owned());
+                                    particle_olivine_b_axis_vectors
+                                        .push(rotation_matrix.row(1).to_owned());
+                                    particle_olivine_c_axis_vectors
+                                        .push(rotation_matrix.row(2).to_owned());
                                 }
 
                                 // enstatite
-                                if pole_figure_configuration.minerals.contains(&Mineral::Enstatite)
+                                if pole_figure_configuration
+                                    .minerals
+                                    .contains(&Mineral::Enstatite)
                                 {
-                                  let euler_angles = Array::from(vec![
-                                      record.mineral_1_EA_phi.unwrap() * deg_to_rad,
-                                      record.mineral_1_EA_theta.unwrap() * deg_to_rad,
-                                      record.mineral_1_EA_z.unwrap() * deg_to_rad,
-                                  ]);
-                                  let rotation_matrix =
-                                      euler_angles_to_rotation_matrix(euler_angles).unwrap();
+                                    let euler_angles = Array::from(vec![
+                                        record.mineral_1_EA_phi.unwrap() * deg_to_rad,
+                                        record.mineral_1_EA_theta.unwrap() * deg_to_rad,
+                                        record.mineral_1_EA_z.unwrap() * deg_to_rad,
+                                    ]);
+                                    let rotation_matrix =
+                                        euler_angles_to_rotation_matrix(euler_angles).unwrap();
 
-                                  particle_enstatite_a_axis_vectors
-                                      .push(rotation_matrix.row(0).to_owned());
-                                  particle_enstatite_b_axis_vectors
-                                      .push(rotation_matrix.row(1).to_owned());
-                                  particle_enstatite_c_axis_vectors
-                                      .push(rotation_matrix.row(2).to_owned());
+                                    particle_enstatite_a_axis_vectors
+                                        .push(rotation_matrix.row(0).to_owned());
+                                    particle_enstatite_b_axis_vectors
+                                        .push(rotation_matrix.row(1).to_owned());
+                                    particle_enstatite_c_axis_vectors
+                                        .push(rotation_matrix.row(2).to_owned());
                                 }
                             }
                             integer = integer + 1;
                         }
 
                         // check if the particle id was found in this file, otherwise continue
-                        if particle_olivine_a_axis_vectors.len() == 0 && particle_enstatite_a_axis_vectors.len() == 0 {
+                        if particle_olivine_a_axis_vectors.len() == 0
+                            && particle_enstatite_a_axis_vectors.len() == 0
+                        {
                             rank_id = rank_id + 1;
                             continue;
                         }
@@ -559,7 +569,10 @@ pub fn process_configuration(config: Config) -> Result<(), Box<dyn std::error::E
                             }
                         }
 
-                        let n_grains = std::cmp::max(particle_olivine_a_axis_vectors.len(),particle_enstatite_a_axis_vectors.len());
+                        let n_grains = std::cmp::max(
+                            particle_olivine_a_axis_vectors.len(),
+                            particle_enstatite_a_axis_vectors.len(),
+                        );
 
                         let mut pole_figure_grid: Vec<Vec<PoleFigure>> = vec![
                                 vec![
