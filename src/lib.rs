@@ -187,7 +187,7 @@ fn get_time_steps(statistics_file: &String) -> Vec<f64> {
         }
 
         if line.find('#') != Some(0) {
-            if line.find("particle_CPO") != None {
+            if line.find("particle_LPO") != None {
                 data = data + &line + "\n";
             }
         }
@@ -211,7 +211,7 @@ fn get_time_steps(statistics_file: &String) -> Vec<f64> {
         }
     }
 
-    assert!(time_step_to_time.len() > 0,"Did not find any entries in the statistics file. This means there where no (non-comment) lines which had 'particle_CPO' in them.");
+    assert!(time_step_to_time.len() > 0,"Did not find any entries in the statistics file. This means there where no (non-comment) lines which had 'particle_LPO' in them.");
 
     time_step_to_time
 }

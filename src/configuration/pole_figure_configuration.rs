@@ -39,7 +39,7 @@ pub struct PoleFiguresConfiguration {
     /// search through all files of the same timestep untill it find the file containing the particle id it was looking for.
     /// The program assumes that all the particles of the same id are not spread out over sever files, but stored in one
     /// file. Having multiple particle id's per file is fine.
-    /// The default value is `particle_CPO/particles`.
+    /// The default value is `particle_LPO/particles`.
     #[serde(default = "particle_data_file_prefix")]
     pub particle_data_file_prefix: String,
 
@@ -50,7 +50,7 @@ pub struct PoleFiguresConfiguration {
     /// search through all files of the same timestep untill it find the file containing the particle id it was looking for.
     /// The program assumes that all the particles of the same id are not spread out over sever files, but stored in one
     /// file. Having multiple particle id's per file is fine.
-    /// The default value is `particle_CPO/weighted_CPO`.
+    /// The default value is `particle_LPO/weighted_CPO`.
     #[serde(default = "grain_data_file_prefix")]
     pub grain_data_file_prefix: String,
 
@@ -108,8 +108,8 @@ impl Default for PoleFiguresConfiguration {
     fn default() -> Self {
         PoleFiguresConfiguration {
             time_data_file: "statistics".to_string(),
-            particle_data_file_prefix: "particle_CPO/particles".to_string(),
-            grain_data_file_prefix: "particle_CPO/weighted_CPO".to_string(),
+            particle_data_file_prefix: "particle_LPO/particles".to_string(),
+            grain_data_file_prefix: "particle_LPO/weighted_CPO".to_string(),
             figure_output_dir: "CPO_figures/".to_string(),
             figure_output_prefix: "weighted_CPO".to_string(),
             color_scale: ColorGradient::Batlow,
